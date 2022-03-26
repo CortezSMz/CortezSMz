@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
+.v-application {
+  [class*="text-"] {
+    font-family: "Roboto Mono", monospace !important;
+  }
+  font-family: "Roboto Mono", monospace !important;
+}
+.v-toolbar__content {
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 20%;
+  display: flex;
+}
+
+.row {
+  min-height: 80vh;
+}
+
+.title {
+  font-size: 1.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  font-weight: 600;
+}
+
+.letter {
+  display: inline-block;
+  line-height: 1em;
+}
