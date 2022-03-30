@@ -64,6 +64,8 @@ export default Vue.extend({
 
       window.addEventListener("scroll", this.onWindowScroll);
 
+      window.addEventListener("mousemove", this.onMouseMove);
+
       this.renderer.autoClearColor = false; // For trails
 
       for (let i = 0; i < this.particles; i++) {
@@ -123,6 +125,8 @@ export default Vue.extend({
         }
       }
 
+      this.gui?.updateDisplay();
+
       this.renderer!.render(this.scene!, this.camera!);
       requestAnimationFrame(this.animate!);
     },
@@ -142,6 +146,11 @@ export default Vue.extend({
       const particlesFolder = this.gui!.addFolder("Particles");
       particlesFolder.add(this, "speed", -1000, 1000);
       particlesFolder.open();
+    },
+
+    onMouseMove(evt: MouseEvent) {
+      this.camera!.rotation.y = (evt.clientX - window.innerWidth / 2) / 20000;
+      this.camera!.rotation.x = (evt.clientY - window.innerHeight / 2) / 20000;
     },
 
     onWindowResize() {
