@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <Background />
     <Header />
     <v-main>
       <router-view />
@@ -11,10 +12,16 @@
 import "@/styles/app.scss";
 
 import Vue from "vue";
+import Background from "./components/Background.vue";
 import Header from "./components/Header.vue";
+
 export default Vue.extend({
-  components: { Header },
   name: "App",
+
+  components: {
+    Header,
+    Background,
+  },
 });
 </script>
 >

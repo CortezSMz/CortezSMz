@@ -1,28 +1,26 @@
 <template>
-  <section class="scene-intro" id="intro">
-    <div class="static-container">
-      <v-btn icon @click="title()">
-        <v-icon>fa-play</v-icon>
-      </v-btn>
-      <div style="width: 300px">
-        <Ufo />
-      </div>
-      <h1 ref="title">Alexandre Cortez</h1>
-
-      <div>
-        <p>
-          Self-taught backend developer,<br />
-          Enjoys coding Typescript, Node.js and Python.<br />
-        </p>
-      </div>
+  <v-col cols="10">
+    <div cols="2">
+      <Ufo ref="ufo" style="height: 500px" />
     </div>
-  </section>
+    <div cols="10" style="float: left">
+      <h1 ref="nome" @click="nomeToUfo">Alexandre Cortez</h1>
+
+      <p ref="texto1" @click="text1ToUfo">
+        Self-taught developer that enjoys writing text files on free time.
+      </p>
+      <p ref="texto2" @click="text2ToUfo">
+        This website is a work in progress. Most of what you see here will
+        probably change.
+      </p>
+    </div>
+  </v-col>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Ufo from "@/assets/Ufo.vue";
-import { suckText } from "@/plugins/animejs/Ufo";
+import { toUfo } from "@/assets/animations/Ufo";
 
 export default Vue.extend({
   name: "Intro",
@@ -32,8 +30,20 @@ export default Vue.extend({
   },
 
   methods: {
-    title(): void {
-      suckText(this.$refs.title as Element);
+    nomeToUfo() {
+      toUfo((this.$refs.ufo as Vue).$el as Element, this.$refs.nome as Element);
+    },
+    text1ToUfo(): void {
+      toUfo(
+        (this.$refs.ufo as Vue).$el as Element,
+        this.$refs.texto1 as Element
+      );
+    },
+    text2ToUfo(): void {
+      toUfo(
+        (this.$refs.ufo as Vue).$el as Element,
+        this.$refs.texto2 as Element
+      );
     },
   },
 });
