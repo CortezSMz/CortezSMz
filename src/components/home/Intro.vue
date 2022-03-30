@@ -1,19 +1,15 @@
 <template>
   <v-col cols="10">
-    <div cols="2">
-      <Ufo ref="ufo" style="height: 500px" />
-    </div>
-    <div cols="10" style="float: left">
-      <h1 ref="nome" @click="nomeToUfo">Alexandre Cortez</h1>
+    <Ufo ref="ufo" style="position: relative; float: right; height: 500px" />
+    <h1 ref="nome" @click="nomeToUfo">Alexandre Cortez</h1>
 
-      <p ref="texto1" @click="text1ToUfo">
-        Self-taught developer that enjoys writing text files on free time.
-      </p>
-      <p ref="texto2" @click="text2ToUfo">
-        This website is a work in progress. Most of what you see here will
-        probably change.
-      </p>
-    </div>
+    <p ref="texto1" @click="text1ToUfo">
+      Self-taught developer that enjoys writing text files on free time.
+    </p>
+    <p ref="texto2" @click="text2ToUfo">
+      This website is a work in progress. Most of what you see here will
+      probably change.
+    </p>
   </v-col>
 </template>
 
