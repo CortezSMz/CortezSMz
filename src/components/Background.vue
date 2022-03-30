@@ -7,6 +7,7 @@
 import Vue from "vue";
 
 import * as THREE from "three";
+import { GUI } from "dat.gui";
 
 export default Vue.extend({
   name: "Background",
@@ -21,6 +22,7 @@ export default Vue.extend({
     renderer: null | THREE.WebGLRenderer;
     starGeo: null | THREE.BufferGeometry;
     scrollY: number;
+    gui: null | GUI;
   } {
     return {
       particles: 500,
@@ -32,11 +34,14 @@ export default Vue.extend({
       renderer: null,
       starGeo: null,
       scrollY: 0,
+      gui: null,
     };
   },
 
   mounted() {
     this.init();
+
+    if (process.env.NODE_ENV === "development") this.setupControls();
   },
 
   methods: {
@@ -62,8 +67,8 @@ export default Vue.extend({
       this.renderer.autoClearColor = false; // For trails
 
       for (let i = 0; i < this.particles; i++) {
-        const x = this.dim * 8 * (Math.random() - 0.5);
-        const y = this.dim * 2 * (Math.random() - 0.5);
+        const x = this.dim * 3 * (Math.random() - 0.5);
+        const y = this.dim * 3 * (Math.random() - 0.5);
         const z = -this.dim * Math.random();
 
         this.vertices.push(x, y, z);
@@ -103,13 +108,15 @@ export default Vue.extend({
     },
 
     animate() {
+      this.camera!.rotation.z += 0.0005;
+
       this.starGeo!.attributes.position.needsUpdate = true;
       let p = this.starGeo!.attributes.position.array as Float32Array;
       for (let i = 0; i < p.length; i += 3) {
         const z = p[i + 2];
         if (z >= 0) {
-          p[i] = this.dim * 8 * (Math.random() - 0.5);
-          p[i + 1] = this.dim * 2 * (Math.random() - 0.5);
+          p[i] = this.dim * 3 * (Math.random() - 0.5);
+          p[i + 1] = this.dim * 3 * (Math.random() - 0.5);
           p[i + 2] = -this.dim;
         } else {
           p[i + 2] += -this.speed / p[i + 2];
@@ -120,6 +127,23 @@ export default Vue.extend({
       requestAnimationFrame(this.animate!);
     },
 
+    setupControls() {
+      if (!this.gui) this.gui = new GUI();
+      const cameraPositionFolder = this.gui!.addFolder("Camera position");
+      cameraPositionFolder.add(this.camera!.position, "x", -1000, 1000);
+      cameraPositionFolder.add(this.camera!.position, "y", -1000, 1000);
+      cameraPositionFolder.add(this.camera!.position, "z", -1000, 1000);
+      cameraPositionFolder.open();
+      const cameraRotationFolder = this.gui!.addFolder("Camera rotation");
+      cameraRotationFolder.add(this.camera!.rotation, "x", -1000, 1000);
+      cameraRotationFolder.add(this.camera!.rotation, "y", -1000, 1000);
+      cameraRotationFolder.add(this.camera!.rotation, "z", -1000, 1000);
+      cameraRotationFolder.open();
+      const particlesFolder = this.gui!.addFolder("Particles");
+      particlesFolder.add(this, "speed", -1000, 1000);
+      particlesFolder.open();
+    },
+
     onWindowResize() {
       this.camera!.aspect = window.innerWidth / window.innerHeight;
       this.camera!.updateProjectionMatrix();
@@ -127,13 +151,22 @@ export default Vue.extend({
     },
 
     onWindowScroll() {
+      const maxParticleSpeed = 800;
+
       if (window.scrollY > this.scrollY) {
-        this.speed += 1000;
+        const ayy = Math.min(
+          maxParticleSpeed,
+          10 * (window.scrollY - this.scrollY)
+        );
+        this.speed += ayy;
+        this.camera!.rotation.z += 0.0005;
       }
+
+      if (this.speed > maxParticleSpeed) this.speed = maxParticleSpeed;
 
       setTimeout(() => {
         this.speed = 20;
-      });
+      }, 10);
 
       this.scrollY = window.scrollY;
     },
