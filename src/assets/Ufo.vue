@@ -16,7 +16,7 @@
     <polygon
       id="beam"
       class="st0"
-      points="-150.2,659.4 -94,219.1 -57.2,219.1 0.3,659 "
+      points="-94.2,150 -94,220 -57.2,220 -57,150"
     />
     <g id="ship">
       <g id="borders">
@@ -123,9 +123,9 @@
       id="beamGradient"
       gradientUnits="userSpaceOnUse"
       x1="-74.05"
-      y1="670.3651"
+      y1="650"
       x2="-74.05"
-      y2="215"
+      y2="210"
     >
       <stop offset="0" style="stop-color: #00ffff; stop-opacity: 0" />
       <stop offset="0.025" style="stop-color: #00ffff; stop-opacity: 0.5" />

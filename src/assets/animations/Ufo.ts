@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { gsap } from "gsap";
-import { Draggable } from "gsap/Draggable";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
-gsap.registerPlugin(Draggable, MotionPathPlugin);
+gsap.registerPlugin(MotionPathPlugin);
 
-function animateUfo(ufo: Element): void {
-  Draggable.create(ufo);
+export function animateUfo(ufo: Element): void {
   const [beam, ship, cat, beamGradient] = ufo.childNodes;
 
   /* Ship animations */
@@ -56,47 +54,3 @@ function animateUfo(ufo: Element): void {
     }
   ); */
 }
-
-function toUfo(ufo: Element, text: Element): void {
-  text.innerHTML = text.textContent
-    ? text.textContent.replace(/\S/g, "<span class='letter'>$&</span>")
-    : "";
-
-  const ship = Array.from(ufo.childNodes).slice(1, 2)[0];
-
-  let letters = text.childNodes as unknown as Element[];
-  letters = Array.from(letters).reverse();
-
-  gsap.timeline();
-  for (let i = letters.length - 1; i >= 0; i--) {
-    if (!(letters[i] instanceof Element)) continue;
-
-    const p = MotionPathPlugin.getRelativePosition(
-      letters[i],
-      ship as Element,
-      [0.5, 0.5],
-      [0.5, 1.01]
-    );
-
-    gsap
-      .timeline()
-      .to(letters[i], {
-        x: "+=" + p.x,
-        y: "+=" + p.y,
-        ease: "easeInOut",
-        duration: 0.1 * i,
-        scale: 0.2,
-      })
-      .to(letters[i], { opacity: 0 })
-      .to(letters[i], {
-        x: 0,
-        y: 0,
-        scale: 1,
-      })
-      .to(letters[i], {
-        opacity: 1,
-      });
-  }
-}
-
-export { animateUfo, toUfo };

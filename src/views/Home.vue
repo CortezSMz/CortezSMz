@@ -4,19 +4,7 @@
       <Intro />
     </v-row>
     <v-row justify="center">
-      <Ipsum />
-    </v-row>
-    <v-row justify="center">
-      <Ipsum />
-    </v-row>
-    <v-row justify="center">
-      <Ipsum />
-    </v-row>
-    <v-row justify="center">
-      <Ipsum />
-    </v-row>
-    <v-row justify="center">
-      <Ipsum />
+      <Intro />
     </v-row>
     <v-row justify="center">
       <Ipsum />
@@ -35,6 +23,10 @@ export default Vue.extend({
   components: {
     Intro,
     Ipsum,
+  },
+
+  created() {
+    window.addEventListener("beforeunload", () => window.scroll(0, 0));
   },
 });
 </script>
