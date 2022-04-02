@@ -1,6 +1,6 @@
 <template>
   <v-col ref="main" cols="10">
-    <Ufo ref="ufo" style="height: 50vh; position: absolute" />
+    <Ufo ref="ufo" />
     <div ref="text" class="content">
       <h1>Alexandre Cortez</h1>
 
@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts">
+import "@/styles/intro.scss";
+
 import Vue from "vue";
 import Ufo from "@/assets/Ufo.vue";
 import { startScene } from "@/assets/scenes/Intro";

@@ -33,6 +33,20 @@ export function animateUfo(ufo: Element): void {
     },
   });
 
+  /* Ship wiggle */
+  gsap
+    .timeline({ repeat: -1, yoyo: true, defaults: { duration: 1 } })
+    .to(ufo, {
+      transformOrigin: "50% 0%",
+      rotateZ: -3,
+      ease: "linear",
+    })
+    .to(ufo, {
+      transformOrigin: "50% 0%",
+      rotateZ: 3,
+      ease: "linear",
+    });
+
   /* Cat  animations */
   const [antenna, body, tail, head, pupil, iris] = cat.childNodes;
   /* Antenna and tail wiggle */

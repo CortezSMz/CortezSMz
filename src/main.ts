@@ -11,6 +11,13 @@ import "@fortawesome/free-solid-svg-icons";
 Vue.config.productionTip = false;
 
 new Vue({
+  data: {
+    isMobile(): boolean {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    },
+  },
   router,
   vuetify,
   render: (h) => h(App),

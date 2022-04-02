@@ -21,8 +21,9 @@ body {
 }
 
 .row {
-  margin: 20vh 0 !important;
-  min-height: 100vh;
+  margin: 15vh 0 !important;
+  overflow-x: clip !important;
+  min-height: 400vh;
   perspective: 900px;
   perspective-origin: 50% 50vh;
   position: relative;

@@ -23,6 +23,7 @@ export default Vue.extend({
     starGeo: null | THREE.BufferGeometry;
     scrollY: number;
     gui: null | GUI;
+    starPoints: null | THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>;
   } {
     return {
       particles: 500,
@@ -35,6 +36,7 @@ export default Vue.extend({
       starGeo: null,
       scrollY: 0,
       gui: null,
+      starPoints: null,
     };
   },
 
@@ -88,7 +90,7 @@ export default Vue.extend({
         depthTest: false, // For trails
       });
 
-      const starPoints = new THREE.Points(this.starGeo, starMat);
+      this.starPoints = new THREE.Points(this.starGeo, starMat);
 
       // The whole fade plate is for trails
       const fadeGeo = new THREE.PlaneBufferGeometry(1, 1);
@@ -103,14 +105,14 @@ export default Vue.extend({
       fadePlate.position.z = -0.1;
 
       this.scene.add(fadePlate);
-      this.scene.add(starPoints);
+      this.scene.add(this.starPoints);
       requestAnimationFrame(this.animate);
 
       this.animate();
     },
 
     animate() {
-      this.camera!.rotation.z += 0.0005;
+      this.starPoints!.rotation.z += 0.0005;
 
       this.starGeo!.attributes.position.needsUpdate = true;
       let p = this.starGeo!.attributes.position.array as Float32Array;
@@ -168,7 +170,7 @@ export default Vue.extend({
           10 * (window.scrollY - this.scrollY)
         );
         this.speed += ayy;
-        this.camera!.rotation.z += 0.0005;
+        this.starPoints!.rotation.z += 0.005;
       }
 
       if (this.speed > maxParticleSpeed) this.speed = maxParticleSpeed;

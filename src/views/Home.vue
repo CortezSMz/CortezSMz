@@ -4,9 +4,6 @@
       <Intro />
     </v-row>
     <v-row justify="center">
-      <Intro />
-    </v-row>
-    <v-row justify="center">
       <Ipsum />
     </v-row>
   </v-container>

@@ -1,5 +1,5 @@
 export default class SplitText {
-  private element: Element;
+  public element: Element;
   public chars: Element[];
   public words: Element[];
   public childTextElements: Element[] = [];
