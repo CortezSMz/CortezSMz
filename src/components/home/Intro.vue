@@ -1,5 +1,5 @@
 <template>
-  <div />
+  <div id="intro" />
 </template>
 
 <script lang="ts">
@@ -33,11 +33,11 @@ export default class Intro extends Vue {
 
     loader.load("assets/Space_Mono_Regular.json", (font) => {
       const geometry = new TextGeometry(
-        `Alexandre Cortez\nSelf-taught developer that enjoys writing text files on free time.\nThis website is a work in progress. Most of what you see here will probably change.`,
+        `Alexandre Cortez\nSelf-taught developer.\nThis website is a work in progress.`,
         {
           font,
-          size: 4,
-          height: 0.2,
+          size: 1,
+          height: 0.1,
         }
       );
 
@@ -50,12 +50,14 @@ export default class Intro extends Vue {
 
       this.textMesh.castShadow = true;
 
-      this.textMesh.position.z = -120;
-
       this.$parent.$parent.scene.add(this.textMesh);
+
+      this.adjust();
 
       this.animate();
     });
+
+    window.addEventListener("resize", this.adjust);
   }
 
   private animate() {
@@ -63,6 +65,10 @@ export default class Intro extends Vue {
       z: -2000,
       duration: 0.5,
     });
+  }
+
+  private adjust() {
+    this.textMesh.position.z = -25 * (window.innerHeight / window.innerWidth);
   }
 }
 </script>

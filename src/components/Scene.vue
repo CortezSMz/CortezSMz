@@ -16,6 +16,8 @@ import { Component, Vue } from "vue-property-decorator";
 
 import * as THREE from "three";
 
+import gsap from "gsap";
+
 import { GUI } from "dat.gui";
 
 import Stars from "@/components/Stars.vue";
@@ -38,7 +40,7 @@ import Stars from "@/components/Stars.vue";
   },
 
   beforeDestroy() {
-    (this.$refs.scene as Element).removeChild(this.renderer!.domElement);
+    (this.$refs.scene as Element).removeChild(this.renderer.domElement);
 
     this.gui?.destroy();
   },
@@ -49,6 +51,8 @@ export default class Scene extends Vue {
   public animations: ((() => void) | string)[][] = [];
 
   private camera!: THREE.PerspectiveCamera;
+
+  private mouseOutTimeout!: number;
 
   private renderer!: THREE.WebGLRenderer;
 
@@ -80,6 +84,8 @@ export default class Scene extends Vue {
 
     window.addEventListener("mousemove", this.onMouseMove);
 
+    window.addEventListener("mouseout", this.onMouseOut);
+
     this.scene.add(ambientLight);
 
     requestAnimationFrame(this.animate);
@@ -90,16 +96,12 @@ export default class Scene extends Vue {
   private animate(): void {
     this.gui?.updateDisplay();
 
-    this.doAnimations();
-
-    this.renderer!.render(this.scene!, this.camera!);
-    requestAnimationFrame(this.animate);
-  }
-
-  private doAnimations(): void {
     for (const [, animation] of this.animations) {
       if (typeof animation !== "string") animation();
     }
+
+    this.renderer.render(this.scene, this.camera);
+    requestAnimationFrame(this.animate);
   }
 
   private setupControls(): void {
@@ -107,27 +109,41 @@ export default class Scene extends Vue {
     const cameraFolder = this.gui.addFolder("Camera");
     cameraFolder.open();
     const cameraPositionFolder = cameraFolder.addFolder("Position");
-    cameraPositionFolder.add(this.camera!.position, "x", -1000, 1000);
-    cameraPositionFolder.add(this.camera!.position, "y", -1000, 1000);
-    cameraPositionFolder.add(this.camera!.position, "z", -1000, 1000);
+    cameraPositionFolder.add(this.camera.position, "x", -1000, 1000);
+    cameraPositionFolder.add(this.camera.position, "y", -1000, 1000);
+    cameraPositionFolder.add(this.camera.position, "z", -1000, 1000);
     cameraPositionFolder.open();
     const cameraRotationFolder = cameraFolder.addFolder("Rotation");
-    cameraRotationFolder.add(this.camera!.rotation, "x", -1000, 1000);
-    cameraRotationFolder.add(this.camera!.rotation, "y", -1000, 1000);
-    cameraRotationFolder.add(this.camera!.rotation, "z", -1000, 1000);
+    cameraRotationFolder.add(this.camera.rotation, "x", -1000, 1000);
+    cameraRotationFolder.add(this.camera.rotation, "y", -1000, 1000);
+    cameraRotationFolder.add(this.camera.rotation, "z", -1000, 1000);
     cameraRotationFolder.open();
   }
 
   private onWindowResize(): void {
-    this.camera!.aspect = window.innerWidth / window.innerHeight;
-    this.camera!.updateProjectionMatrix();
-    this.renderer!.setSize(window.innerWidth, window.innerHeight);
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   private onMouseMove(evt: MouseEvent) {
-    this.camera!.rotation.y = -((evt.clientX / window.innerWidth) * 2 - 1) / 5;
-    this.camera!.rotation.x = (-(evt.clientY / window.innerHeight) * 2 + 1) / 5;
+    gsap.to(this.camera.rotation, {
+      x: (-(evt.clientY / window.innerHeight) * 2 + 1) / 5,
+      y: -((evt.clientX / window.innerWidth) * 2 - 1) / 5,
+      ease: "circ",
+    });
+  }
+
+  private onMouseOut() {
+    clearTimeout(this.mouseOutTimeout);
+
+    this.mouseOutTimeout = setTimeout(() => {
+      gsap.to(this.camera.rotation, {
+        x: 0,
+        y: 0,
+        ease: "circ",
+      });
+    }, 500);
   }
 }
 </script>
->
