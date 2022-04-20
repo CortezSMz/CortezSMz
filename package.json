@@ -1,6 +1,6 @@
 {
   "name": "cortezsmz",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,6 +12,8 @@
     "gsap": "^3.9.1",
     "three": "^0.139.0",
     "vue": "^2.6.11",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
     "vuetify": "^2.6.0"
   },

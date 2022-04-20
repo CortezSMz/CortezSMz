@@ -1,29 +1,23 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <Intro />
-    </v-row>
-    <v-row justify="center">
-      <Ipsum />
-    </v-row>
-  </v-container>
+  <div id="home">
+    <Intro />
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Intro from "@/components/home/Intro.vue";
-import Ipsum from "@/components/home/Ipsum.vue";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
+import Intro from "@/components/home/Intro.vue";
+import Scene from "@/components/Scene.vue";
+
+@Component<Home>({
   name: "Home",
 
   components: {
     Intro,
-    Ipsum,
   },
-
-  created() {
-    window.addEventListener("beforeunload", () => window.scroll(0, 0));
-  },
-});
+})
+export default class Home extends Vue {
+  $parent!: Scene;
+}
 </script>

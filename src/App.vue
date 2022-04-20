@@ -1,27 +1,29 @@
 <template>
   <v-app>
-    <Background />
     <Header />
-    <v-main>
-      <router-view />
-    </v-main>
+    <Scene />
   </v-app>
 </template>
 
 <script lang="ts">
 import "@/styles/app.scss";
 
-import Vue from "vue";
-import Background from "./components/Background.vue";
-import Header from "./components/Header.vue";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
+import Header from "@/components/Header.vue";
+import Scene from "@/components/Scene.vue";
+
+@Component<App>({
   name: "App",
 
   components: {
     Header,
-    Background,
+    Scene,
   },
-});
+
+  created() {
+    window.addEventListener("beforeunload", () => window.scroll(0, 0));
+  },
+})
+export default class App extends Vue {}
 </script>
->
