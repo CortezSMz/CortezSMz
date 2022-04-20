@@ -20,6 +20,8 @@ import gsap from "gsap";
 
 import { GUI } from "dat.gui";
 
+import Raycaster from "@/plugins/Raycaster";
+
 import Stars from "@/components/Stars.vue";
 
 @Component<Scene>({
@@ -56,6 +58,8 @@ export default class Scene extends Vue {
 
   private renderer!: THREE.WebGLRenderer;
 
+  public raycaster!: Raycaster;
+
   private gui!: GUI;
 
   private init(): void {
@@ -73,6 +77,8 @@ export default class Scene extends Vue {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
 
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+    this.raycaster = new Raycaster(this.camera, this.renderer.domElement);
 
     this.renderer.autoClearColor = false;
 

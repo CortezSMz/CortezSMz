@@ -21,10 +21,16 @@ import Home from "@/views/Home.vue";
 
   beforeDestroy() {
     this.$parent.$parent.scene.remove(this.textMesh);
+
+    this.$parent.$parent.raycaster.off(
+      "pointermove",
+      this.textMesh,
+      this.changeColor
+    );
   },
 })
 export default class Intro extends Vue {
-  $parent!: Home;
+  public $parent!: Home;
 
   private textMesh!: THREE.Mesh<TextGeometry, THREE.MeshPhongMaterial[]>;
 
@@ -37,7 +43,7 @@ export default class Intro extends Vue {
         {
           font,
           size: 1,
-          height: 0.1,
+          height: 0.2,
         }
       );
 
@@ -45,12 +51,18 @@ export default class Intro extends Vue {
 
       this.textMesh = new THREE.Mesh(geometry, [
         new THREE.MeshPhongMaterial({ color: 0xfafafa, flatShading: true }),
-        new THREE.MeshPhongMaterial({ color: 0x000000 }),
+        new THREE.MeshPhongMaterial({ color: 0x747474 }),
       ]);
 
       this.textMesh.castShadow = true;
 
       this.$parent.$parent.scene.add(this.textMesh);
+
+      this.$parent.$parent.raycaster.on(
+        "pointermove",
+        this.textMesh,
+        this.changeColor
+      );
 
       this.adjust();
 
@@ -69,6 +81,27 @@ export default class Intro extends Vue {
 
   private adjust() {
     this.textMesh.position.z = -25 * (window.innerHeight / window.innerWidth);
+  }
+
+  private changeColor() {
+    const r = gsap.utils.random(0, 1);
+    const g = gsap.utils.random(0, 1);
+    const b = gsap.utils.random(0, 1);
+
+    gsap
+      .timeline()
+      .to(this.textMesh.material[0].color, {
+        r,
+        g,
+        b,
+        duration: 0.5,
+      })
+      .to(this.textMesh.material[1].color, {
+        r: r / 2,
+        g: g / 2,
+        b: b / 2,
+        duration: 1,
+      });
   }
 }
 </script>
