@@ -22,7 +22,7 @@ import * as THREE from "three";
 
   beforeDestroy() {
     this.$parent.animations = this.$parent.animations.filter(
-      (animation) => animation[0] === this.$options.name
+      (animation) => animation[0] !== this.$options.name
     );
 
     this.$parent.scene.remove(this.starPoints);
