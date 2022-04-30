@@ -6,102 +6,86 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import * as THREE from "three";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 
 import gsap from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+
+gsap.registerPlugin(MotionPathPlugin);
+
+import ResponsiveTextGeometry from "@/plugins/ResponsiveTextGeometry";
+
 import Home from "@/views/Home.vue";
 
 @Component<Intro>({
   name: "Intro",
 
-  mounted() {
-    this.init();
+  async mounted() {
+    this.$nextTick(async () => {
+      await this.init();
+    });
   },
 
   beforeDestroy() {
-    this.$parent.$parent.scene.remove(this.textMesh);
-
-    this.$parent.$parent.raycaster.off(
-      "pointermove",
-      this.textMesh,
-      this.changeColor
-    );
+    this.$parent.$parent.scene.remove(this.scene);
   },
 })
 export default class Intro extends Vue {
   public $parent!: Home;
 
-  private textMesh!: THREE.Mesh<TextGeometry, THREE.MeshPhongMaterial[]>;
+  private scene!: THREE.Scene;
 
-  private init() {
-    const loader = new FontLoader();
+  private async init() {
+    const text = new ResponsiveTextGeometry(
+      `
+      Alexandre Cortez
 
-    loader.load("assets/Space_Mono_Regular.json", (font) => {
-      const geometry = new TextGeometry(
-        `Alexandre Cortez\nSelf-taught developer.\nThis website is a work in progress.`,
-        {
-          font,
-          size: 1,
-          height: 0.2,
-        }
-      );
+      Self-taught developer.
+      This website is a work in progress.
+      `,
+      "assets/Space_Mono_Regular.json",
+      this.$parent.$parent.camera
+    );
 
-      geometry.center();
+    text.scene.position.z = -20;
 
-      this.textMesh = new THREE.Mesh(geometry, [
-        new THREE.MeshPhongMaterial({ color: 0xfafafa, flatShading: true }),
-        new THREE.MeshPhongMaterial({ color: 0x747474 }),
-      ]);
+    await text.init();
 
-      this.textMesh.castShadow = true;
+    this.scene = text.scene;
 
-      this.$parent.$parent.scene.add(this.textMesh);
+    this.$parent.$parent.scene.add(text.scene);
 
-      this.$parent.$parent.raycaster.on(
-        "pointermove",
-        this.textMesh,
-        this.changeColor
-      );
-
-      this.adjust();
-
-      this.animate();
-    });
-
-    window.addEventListener("resize", this.adjust);
-  }
-
-  private animate() {
-    gsap.from(this.textMesh.position, {
-      z: -2000,
-      duration: 0.5,
-    });
-  }
-
-  private adjust() {
-    this.textMesh.position.z = -25 * (window.innerHeight / window.innerWidth);
-  }
-
-  private changeColor() {
-    const r = gsap.utils.random(0, 1);
-    const g = gsap.utils.random(0, 1);
-    const b = gsap.utils.random(0, 1);
-
-    gsap
-      .timeline()
-      .to(this.textMesh.material[0].color, {
-        r,
-        g,
-        b,
-        duration: 0.5,
-      })
-      .to(this.textMesh.material[1].color, {
-        r: r / 2,
-        g: g / 2,
-        b: b / 2,
-        duration: 1,
+    for (const char of text.chars)
+      this.$parent.$parent.raycaster.on("pointermove", char, () => {
+        const r = gsap.utils.random(0, 1);
+        const g = gsap.utils.random(0, 1);
+        const b = gsap.utils.random(0, 1);
+        gsap
+          .timeline()
+          .to(char.material[0].color, {
+            r,
+            g,
+            b,
+            duration: 0.5,
+          })
+          .to(char.material[1].color, {
+            r: r / 2,
+            g: g / 2,
+            b: b / 2,
+            duration: 1,
+          });
       });
+
+    gsap.from(
+      text.chars.map((c) => c.position),
+      {
+        z: -1500,
+        duration: 0.5,
+        stagger: {
+          each: 0.01,
+          from: "random",
+        },
+      }
+    );
   }
 }
 </script>

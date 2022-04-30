@@ -52,7 +52,7 @@ export default class Scene extends Vue {
 
   public animations: ((() => void) | string)[][] = [];
 
-  private camera!: THREE.PerspectiveCamera;
+  public camera!: THREE.PerspectiveCamera;
 
   private mouseOutTimeout!: number;
 
