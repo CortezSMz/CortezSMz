@@ -78,10 +78,10 @@ export default class Intro extends Vue {
     gsap.from(
       text.chars.map((c) => c.position),
       {
-        z: -1500,
-        duration: 0.5,
+        z: -2000,
+        duration: 2,
         stagger: {
-          each: 0.01,
+          each: 0.2,
           from: "random",
         },
       }
